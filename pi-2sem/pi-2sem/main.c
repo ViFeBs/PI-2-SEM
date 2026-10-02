@@ -7,6 +7,32 @@
 #include <allegro5/keyboard.h>
 
 
+typedef struct Inimigo
+{
+    int x, y,vida;
+    char letra;
+} Inimigo;
+
+char inimigosCapturados[4];
+
+void mostraInimigos(char* arr) {
+    int i;
+    for (i = 0; i < 4 - 1; i++)
+        printf("%c", arr[i]);
+
+}
+
+static void getInimigos(char inimigo) {
+    printf("%c", inimigo);
+    int i;
+    for (i = 0; sizeof(inimigosCapturados) > i; i++) {
+        if (inimigosCapturados[i] != "0") {
+            inimigosCapturados[i] = inimigo;
+            break;
+        }
+    }
+    mostraInimigos(inimigosCapturados);
+}
 
 
 int main()
@@ -18,8 +44,7 @@ int main()
     al_install_keyboard();
     al_install_mouse();
 
-    //função para ter certeza que o mouse será iniciado
-    //must_init(al_install_mouse(), "mouse");
+    
 
     //desenhar a tela
     ALLEGRO_DISPLAY* display = al_create_display(800, 600);
@@ -55,12 +80,16 @@ int main()
     //aqui fazemos com que a array definitivamente não tenha nenhum valor
     memset(key, 0, sizeof(key));
 
+    struct Inimigo i1 = {700,120,100,'A'};
+    struct Inimigo i2 = {700,250,100,'B'};
+    
+    
 
     while (running) {
         //game loop
 
-
-
+        
+            
         //ativa o timer
         al_start_timer(timer);
         //ativa os eventos
@@ -74,9 +103,9 @@ int main()
         ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
 
 
-        //al_draw_filled_circle(300,300,50,blue);
-
-
+        al_draw_filled_circle(i1.x,i1.y,50,blue);
+        al_draw_filled_circle(i2.x, i2.y, 50, blue);
+        al_draw_filled_rectangle(i1.x, i1.y, i1.x - 25, i1.y + 25, red);
 
         switch (event.type)
         {
@@ -105,10 +134,11 @@ int main()
 
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
                 if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_LEFT) {
-              
+                    if (event.mouse.x > i1.x && event.mouse.x < i1.x + 50 && event.mouse.y > i1.y && event.mouse.y < i1.y + 50) {
+                        getInimigos(i1.letra);
+                        printf("Inimigo Capturado");
+                    }
                     printf("Mouse Clicado");
-               
-
                 }
                 break;
 
@@ -140,5 +170,6 @@ int main()
     printf("retornou ao console");
     return 0;
 }
+
 
 
