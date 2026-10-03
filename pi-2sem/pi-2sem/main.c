@@ -23,10 +23,10 @@ void mostraInimigos(char* arr) {
 }
 
 static void getInimigos(char inimigo) {
-    printf("%c", inimigo);
+    //printf("%c", inimigo);
     int i;
     for (i = 0; sizeof(inimigosCapturados) > i; i++) {
-        if (inimigosCapturados[i] != "0") {
+        if (inimigosCapturados[i] == 0) {
             inimigosCapturados[i] = inimigo;
             break;
         }
@@ -47,21 +47,24 @@ int main()
     
 
     //desenhar a tela
-    ALLEGRO_DISPLAY* display = al_create_display(800, 600);
+    ALLEGRO_DISPLAY* display = al_create_display(1280, 720);
 
-    //vairavel de controle do game loop
+    //variavel de controle do game loop
     bool running = true;
 
+    //variaveis do puzzle
+    bool condicao = false;
 
-    //Variavel o personagem
+    //Variaveis do personagem
     int xPersonagem = 150;
-    int yPersonagem = 100;
+    int yPersonagem = 500;
+    int speed = 10;
 
     //timer não é obrigatorio mas ele da um controle maior ao fps do game
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
 
     //carregar imagem
-    ALLEGRO_BITMAP* image = al_load_bitmap("roadhog.png");
+    ALLEGRO_BITMAP* image = al_load_bitmap("cat.png");
 
     //carregar fila de eventos para observar os eventos do teclado
     ALLEGRO_EVENT_QUEUE* fila = al_create_event_queue();
@@ -80,9 +83,11 @@ int main()
     //aqui fazemos com que a array definitivamente não tenha nenhum valor
     memset(key, 0, sizeof(key));
 
-    struct Inimigo i1 = {700,120,100,'A'};
-    struct Inimigo i2 = {700,250,100,'B'};
-    
+    struct Inimigo i1 = {150,120,100,'D'};
+    struct Inimigo i2 = {260,120,100,'O'};
+    struct Inimigo i3 = {370,120,100,'A'};
+    struct Inimigo i4 = {480,120,100,'B'};
+    struct Inimigo i5 = {590,120,100,'S'};
     
 
     while (running) {
@@ -101,24 +106,46 @@ int main()
 
         ALLEGRO_COLOR red = al_map_rgb(255, 0, 0);
         ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
+        ALLEGRO_COLOR yellow = al_map_rgb(227, 176, 36);
+        ALLEGRO_COLOR green = al_map_rgba(22, 255, 20, 100);
 
-
+        //inimigos
         al_draw_filled_circle(i1.x,i1.y,50,blue);
         al_draw_filled_circle(i2.x, i2.y, 50, blue);
-        al_draw_filled_rectangle(i1.x, i1.y, i1.x - 25, i1.y + 25, red);
+        al_draw_filled_circle(i3.x, i3.y, 50, blue);
+        al_draw_filled_circle(i4.x, i4.y, 50, blue);
+        al_draw_filled_circle(i5.x, i5.y, 50, blue);
+
+        //colisão
+        al_draw_filled_rectangle(i1.x - 40, i1.y + 40, i1.x + 40, i1.y - 40, red);
+        al_draw_filled_rectangle(i2.x - 40, i2.y + 40, i2.x + 40, i2.y - 40, red);
+        al_draw_filled_rectangle(i3.x - 40, i3.y + 40, i3.x + 40, i3.y - 40, red);
+        al_draw_filled_rectangle(i4.x - 40, i4.y + 40, i4.x + 40, i4.y - 40, red);
+        al_draw_filled_rectangle(i5.x - 40, i5.y + 40, i5.x + 40, i5.y - 40, red);
+
+        //colisão interação com a porta
+        al_draw_filled_rectangle(350, 200, 700, 720, green);
+
+        //"Porta"
+        if(!condicao)
+            al_draw_filled_rectangle(700, 10, 780, 720, yellow);
 
         switch (event.type)
         {
             case ALLEGRO_EVENT_TIMER:
                 //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
-                if (key[ALLEGRO_KEY_W])
-                    yPersonagem--;
+                if (key[ALLEGRO_KEY_W]) 
+                    if (yPersonagem > 50)
+                        yPersonagem -= speed;
                 if (key[ALLEGRO_KEY_S])
-                    yPersonagem++;
+                    if(yPersonagem < 670)
+                        yPersonagem += speed;
                 if (key[ALLEGRO_KEY_A])
-                    xPersonagem--;
+                    if(xPersonagem > 50)
+                        xPersonagem -= speed;
                 if (key[ALLEGRO_KEY_D])
-                    xPersonagem++;
+                    if(!condicao && (xPersonagem < 670))
+                        xPersonagem += speed;
 
                 if (key[ALLEGRO_KEY_ESCAPE])
                     running = false;
@@ -134,11 +161,27 @@ int main()
 
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
                 if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_LEFT) {
-                    if (event.mouse.x > i1.x && event.mouse.x < i1.x + 50 && event.mouse.y > i1.y && event.mouse.y < i1.y + 50) {
+                    if (event.mouse.x > (i1.x - 40) && event.mouse.x < (i1.x + 40) && event.mouse.y > (i1.y - 40) && event.mouse.y < (i1.y + 40)) {
                         getInimigos(i1.letra);
                         printf("Inimigo Capturado");
                     }
-                    printf("Mouse Clicado");
+                    if (event.mouse.x > (i2.x - 40) && event.mouse.x < (i2.x + 40) && event.mouse.y >(i2.y - 40) && event.mouse.y < (i2.y + 40)) {
+                        getInimigos(i2.letra);
+                        printf("Inimigo Capturado");
+                    }
+                    if (event.mouse.x > (i3.x - 40) && event.mouse.x < (i3.x + 40) && event.mouse.y > (i3.y - 40) && event.mouse.y < (i3.y + 40)) {
+                        getInimigos(i3.letra);
+                        printf("Inimigo Capturado");
+                    }
+                    if (event.mouse.x > (i4.x - 40) && event.mouse.x < (i4.x + 40) && event.mouse.y >(i4.y - 40) && event.mouse.y < (i4.y + 40)) {
+                        getInimigos(i4.letra);
+                        printf("Inimigo Capturado");
+                    }
+                    if (event.mouse.x > (i5.x - 40) && event.mouse.x < (i5.x + 40) && event.mouse.y >(i5.y - 40) && event.mouse.y < (i5.y + 40)) {
+                        getInimigos(i5.letra);
+                        printf("Inimigo Capturado");
+                    }
+                    //printf("Mouse Clicado");
                 }
                 break;
 
@@ -159,7 +202,7 @@ int main()
 
 
         //desenha a imagem na tela
-        al_draw_bitmap(image, xPersonagem, yPersonagem, 0);
+        al_draw_bitmap(image, xPersonagem - 50, yPersonagem - 50, 0);
        
         //atualiza os elementos graficos da tela
         al_flip_display();

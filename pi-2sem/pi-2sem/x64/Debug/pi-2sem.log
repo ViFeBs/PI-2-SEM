@@ -1,3 +1,2 @@
 ﻿  main.c
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(29,35): warning C4047: '!=': 'int' difere em níveis de indireção de 'char [2]'
   pi-2sem.vcxproj -> E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\x64\Debug\pi-2sem.exe
