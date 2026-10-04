@@ -5,6 +5,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/keyboard.h>
+#include <allegro5/allegro_font.h>
 
 
 typedef struct Inimigo
@@ -13,27 +14,69 @@ typedef struct Inimigo
     char letra;
 } Inimigo;
 
-char inimigosCapturados[4];
+typedef struct Player
+{
+    int x, y, life, speed;
+} Player;
+
+char inimigosCapturados[2];
+int contador;
+bool inventarioCheio;
 
 void mostraInimigos(char* arr) {
     int i;
-    for (i = 0; i < 4 - 1; i++)
+    for (i = 0; i < sizeof(arr); i++)
         printf("%c", arr[i]);
 
 }
 
-static void getInimigos(char inimigo) {
+static void getInimigos(Inimigo inimigo) {
     //printf("%c", inimigo);
     int i;
     for (i = 0; sizeof(inimigosCapturados) > i; i++) {
         if (inimigosCapturados[i] == 0) {
-            inimigosCapturados[i] = inimigo;
+            inimigosCapturados[i] = inimigo.letra;
+            contador++;
             break;
         }
     }
+    if (contador == 2)
+        inventarioCheio = true;
     mostraInimigos(inimigosCapturados);
 }
 
+//função de colisão
+bool collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2)
+{
+    if (ax1 > bx2) return false;
+    if (ax2 < bx1) return false;
+    if (ay1 > by2) return false;
+    if (ay2 < by1) return false;
+
+    return true;
+}
+
+//função checkar puzzle
+bool checkar() {
+    int corretos = 0;
+    for (int i = 0; sizeof(inimigosCapturados) > i; i++) {
+        if (inimigosCapturados[i] == 68) {
+            corretos++;
+        }
+        else if (inimigosCapturados[i] == 79) {
+            corretos++;
+        }
+        else {
+            inimigosCapturados[i] = 0;
+            contador--;
+            inventarioCheio = false;
+        }
+    }
+    if (corretos == 2)
+        return true;
+
+    return false;
+}
 
 int main()
 {
@@ -49,6 +92,10 @@ int main()
     //desenhar a tela
     ALLEGRO_DISPLAY* display = al_create_display(1280, 720);
 
+    //inicia texto
+    ALLEGRO_FONT* al_load_font(char const* filename, int size, int flags);
+    ALLEGRO_FONT* font = al_create_builtin_font();
+
     //variavel de controle do game loop
     bool running = true;
 
@@ -56,9 +103,8 @@ int main()
     bool condicao = false;
 
     //Variaveis do personagem
-    int xPersonagem = 150;
-    int yPersonagem = 500;
-    int speed = 10;
+    struct Player p1 = { 150,500,100,10 };
+   
 
     //timer não é obrigatorio mas ele da um controle maior ao fps do game
     ALLEGRO_TIMER* timer = al_create_timer(1.0 / 60.0);
@@ -92,8 +138,6 @@ int main()
 
     while (running) {
         //game loop
-
-        
             
         //ativa o timer
         al_start_timer(timer);
@@ -108,20 +152,41 @@ int main()
         ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
         ALLEGRO_COLOR yellow = al_map_rgb(227, 176, 36);
         ALLEGRO_COLOR green = al_map_rgba(22, 255, 20, 100);
+        ALLEGRO_COLOR black = al_map_rgb(0, 0, 0);
 
         //inimigos
-        al_draw_filled_circle(i1.x,i1.y,50,blue);
-        al_draw_filled_circle(i2.x, i2.y, 50, blue);
-        al_draw_filled_circle(i3.x, i3.y, 50, blue);
-        al_draw_filled_circle(i4.x, i4.y, 50, blue);
-        al_draw_filled_circle(i5.x, i5.y, 50, blue);
+        if (i1.vida > 0) {
+            al_draw_filled_circle(i1.x, i1.y, 50, blue);
+            //colisão
+            al_draw_filled_rectangle(i1.x - 40, i1.y + 40, i1.x + 40, i1.y - 40, red);
+            al_draw_text(font, black, i1.x, i1.y - 70, ALLEGRO_ALIGN_CENTER, "D");
+        }
+        if (i2.vida > 0) {
+            al_draw_filled_circle(i2.x, i2.y, 50, blue);
+            al_draw_filled_rectangle(i2.x - 40, i2.y + 40, i2.x + 40, i2.y - 40, red);
+            al_draw_text(font, black, i2.x, i2.y - 70, ALLEGRO_ALIGN_CENTER, "O");
+        }
+        
+        if (i3.vida > 0) {
+            al_draw_filled_circle(i3.x, i3.y, 50, blue);
+            al_draw_filled_rectangle(i3.x - 40, i3.y + 40, i3.x + 40, i3.y - 40, red);
+            al_draw_text(font, black, i3.x, i3.y - 70, ALLEGRO_ALIGN_CENTER, "A");
+        }
+        
+        if (i4.vida > 0) {
+            al_draw_filled_circle(i4.x, i4.y, 50, blue);
+            al_draw_filled_rectangle(i4.x - 40, i4.y + 40, i4.x + 40, i4.y - 40, red);
+            al_draw_text(font, black, i4.x, i4.y - 70, ALLEGRO_ALIGN_CENTER, "B");
+        }
+        
+        if (i5.vida > 0) {
+            al_draw_filled_circle(i5.x, i5.y, 50, blue);
+            al_draw_filled_rectangle(i5.x - 40, i5.y + 40, i5.x + 40, i5.y - 40, red);
+            al_draw_text(font, black, i5.x, i5.y - 70, ALLEGRO_ALIGN_CENTER, "S");
+        }
 
-        //colisão
-        al_draw_filled_rectangle(i1.x - 40, i1.y + 40, i1.x + 40, i1.y - 40, red);
-        al_draw_filled_rectangle(i2.x - 40, i2.y + 40, i2.x + 40, i2.y - 40, red);
-        al_draw_filled_rectangle(i3.x - 40, i3.y + 40, i3.x + 40, i3.y - 40, red);
-        al_draw_filled_rectangle(i4.x - 40, i4.y + 40, i4.x + 40, i4.y - 40, red);
-        al_draw_filled_rectangle(i5.x - 40, i5.y + 40, i5.x + 40, i5.y - 40, red);
+        //colisão do personagem
+        //al_draw_filled_rectangle(xPersonagem - 45, yPersonagem + 47, xPersonagem + 40, yPersonagem - 44, red);
 
         //colisão interação com a porta
         al_draw_filled_rectangle(350, 200, 700, 720, green);
@@ -130,22 +195,45 @@ int main()
         if(!condicao)
             al_draw_filled_rectangle(700, 10, 780, 720, yellow);
 
+
+        if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720)) {
+            al_draw_text(font, black, 640, 180, ALLEGRO_ALIGN_CENTER, "How __ i open this door?");
+            al_draw_text(font, black, 640, 190, ALLEGRO_ALIGN_CENTER, "Aperte E para interagir");
+        }
+            
+        if (inventarioCheio) {
+            al_draw_text(font, red, 640, 640, ALLEGRO_ALIGN_CENTER, "Inventário Cheio");
+        }
+
+        char vida[20];
+        snprintf(vida, sizeof(vida), "%d", p1.life);
+        al_draw_text(font, red, 1200, 140, ALLEGRO_ALIGN_CENTER, vida);
+
         switch (event.type)
         {
             case ALLEGRO_EVENT_TIMER:
                 //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
                 if (key[ALLEGRO_KEY_W]) 
-                    if (yPersonagem > 50)
-                        yPersonagem -= speed;
+                    if (p1.y > 50)
+                        p1.y -= p1.speed;
                 if (key[ALLEGRO_KEY_S])
-                    if(yPersonagem < 670)
-                        yPersonagem += speed;
+                    if(p1.y < 670)
+                        p1.y += p1.speed;
                 if (key[ALLEGRO_KEY_A])
-                    if(xPersonagem > 50)
-                        xPersonagem -= speed;
+                    if(p1.x > 50)
+                        p1.x -= p1.speed;
                 if (key[ALLEGRO_KEY_D])
-                    if(!condicao && (xPersonagem < 670))
-                        xPersonagem += speed;
+                    if (!condicao) {
+                        if ((p1.x < 670))
+                            p1.x += p1.speed;
+                    }else
+                        p1.x += p1.speed;
+
+                if (key[ALLEGRO_KEY_E])
+                    if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720) && checkar())
+                        condicao = true;
+                    else
+                        p1.life = p1.life - 40;
 
                 if (key[ALLEGRO_KEY_ESCAPE])
                     running = false;
@@ -156,30 +244,40 @@ int main()
 
 
             case ALLEGRO_EVENT_MOUSE_AXES:
-                al_draw_line(xPersonagem, yPersonagem, event.mouse.x, event.mouse.y, red, 5);
+                al_draw_line(p1.x, p1.y, event.mouse.x, event.mouse.y, red, 5);
                 break;
 
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
                 if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_LEFT) {
                     if (event.mouse.x > (i1.x - 40) && event.mouse.x < (i1.x + 40) && event.mouse.y > (i1.y - 40) && event.mouse.y < (i1.y + 40)) {
-                        getInimigos(i1.letra);
-                        printf("Inimigo Capturado");
+                        if ((i1.vida > 0) && !inventarioCheio) {
+                            getInimigos(i1);
+                            i1.vida = 0;
+                        } 
                     }
                     if (event.mouse.x > (i2.x - 40) && event.mouse.x < (i2.x + 40) && event.mouse.y >(i2.y - 40) && event.mouse.y < (i2.y + 40)) {
-                        getInimigos(i2.letra);
-                        printf("Inimigo Capturado");
+                        if ((i2.vida > 0) && !inventarioCheio) {
+                            getInimigos(i2);
+                            i2.vida = 0;
+                        }   
                     }
                     if (event.mouse.x > (i3.x - 40) && event.mouse.x < (i3.x + 40) && event.mouse.y > (i3.y - 40) && event.mouse.y < (i3.y + 40)) {
-                        getInimigos(i3.letra);
-                        printf("Inimigo Capturado");
+                        if ((i3.vida > 0) && !inventarioCheio) {
+                            getInimigos(i3);
+                            i3.vida = 0;
+                        }      
                     }
                     if (event.mouse.x > (i4.x - 40) && event.mouse.x < (i4.x + 40) && event.mouse.y >(i4.y - 40) && event.mouse.y < (i4.y + 40)) {
-                        getInimigos(i4.letra);
-                        printf("Inimigo Capturado");
+                        if ((i4.vida > 0) && !inventarioCheio) {
+                            getInimigos(i4);
+                            i4.vida = 0;
+                        }                     
                     }
                     if (event.mouse.x > (i5.x - 40) && event.mouse.x < (i5.x + 40) && event.mouse.y >(i5.y - 40) && event.mouse.y < (i5.y + 40)) {
-                        getInimigos(i5.letra);
-                        printf("Inimigo Capturado");
+                        if ((i5.vida > 0) && !inventarioCheio) {
+                            getInimigos(i5);
+                            i5.vida = 0;
+                        }
                     }
                     //printf("Mouse Clicado");
                 }
@@ -202,7 +300,7 @@ int main()
 
 
         //desenha a imagem na tela
-        al_draw_bitmap(image, xPersonagem - 50, yPersonagem - 50, 0);
+        al_draw_bitmap(image, p1.x - 50, p1.y - 50, 0);
        
         //atualiza os elementos graficos da tela
         al_flip_display();
