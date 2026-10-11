@@ -309,7 +309,7 @@ int main()
                 break;
 
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
-                if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_LEFT) {
+                if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_RIGHT) {
                     if (event.mouse.x > (i1.x - 40) && event.mouse.x < (i1.x + 40) && event.mouse.y > (i1.y - 40) && event.mouse.y < (i1.y + 40)) {
                         if ((i1.vida > 0) && !inventarioCheio) {
                             getInimigos(i1);
@@ -342,7 +342,7 @@ int main()
                     }
                     //printf("Mouse Clicado");
                 }
-                if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_RIGHT) {
+                if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_LEFT) {
 
                     for (int i = 0; i < MAX_BALAS; i++) {
 
