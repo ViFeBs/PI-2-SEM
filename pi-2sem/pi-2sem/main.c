@@ -61,6 +61,7 @@ void mostraInimigos(char* arr) {
 
 }
 
+
 static void getInimigos(Inimigo inimigo) {
     //printf("%c", inimigo);
     int i;
@@ -387,6 +388,14 @@ int main()
                 );
             }
         }
+
+        //move os inimigos na direção do jogador
+        float enemyX, enemyY;
+        enemyX = p1.x - i1.x;
+        enemyY = p1.y - i1.y;
+        float angulo = atan2(enemyY, enemyX);
+        i1.x += cos(angulo) * 3;
+        i1.y += sin(angulo) * 3;
         //esconde o cursor da tela
         //al_hide_mouse_cursor(display);
 
