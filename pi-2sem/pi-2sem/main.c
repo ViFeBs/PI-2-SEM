@@ -118,7 +118,7 @@ int main()
     al_install_keyboard();
     al_install_mouse();
 
-    
+
 
     //desenhar a tela
     ALLEGRO_DISPLAY* display = al_create_display(1280, 720);
@@ -137,8 +137,8 @@ int main()
     struct Player p1 = { 150,500,100,10 };
 
     // Inicializando a bala e a velocidade
-    #define MAX_BALAS 100
-    Bullet bullet[MAX_BALAS] = {0};
+#define MAX_BALAS 100
+    Bullet bullet[MAX_BALAS] = { 0 };
     float velocidade_bala = 10.0f;
 
     //timer não é obrigatorio mas ele da um controle maior ao fps do game
@@ -156,20 +156,22 @@ int main()
 
     //movimentação do personagem
 
-    #define KEY_SEEN     1
-    #define KEY_DOWN     2
- 
+#define KEY_SEEN     1
+#define KEY_DOWN     2
 
-    //array que define quais teclas podem ser clicadas assim evitando que o pragram cheque teclas desnecessárias
+
+//array que define quais teclas podem ser clicadas assim evitando que o pragram cheque teclas desnecessárias
     unsigned char key[ALLEGRO_KEY_MAX];
     //aqui fazemos com que a array definitivamente não tenha nenhum valor
     memset(key, 0, sizeof(key));
 
-    struct Inimigo i1 = {150,120,100,'D'};
-    struct Inimigo i2 = {260,120,100,'O'};
-    struct Inimigo i3 = {370,120,100,'A'};
-    struct Inimigo i4 = {480,120,100,'B'};
-    struct Inimigo i5 = {590,120,100,'S'};
+    struct Inimigo i1 = { 150,120,100,'D' };
+    struct Inimigo i2 = { 260,120,100,'O' };
+    struct Inimigo i3 = { 370,120,100,'A' };
+    struct Inimigo i4 = { 480,120,100,'B' };
+    struct Inimigo i5 = { 590,120,100,'S' };
+
+    Inimigo* arr_inimigos[5] = {&i1, &i2, &i3, &i4, &i5};
 
     //ativa o timer
     al_start_timer(timer);
@@ -293,9 +295,20 @@ int main()
 
                             bullet[i].estado = 0;
                         }
-                        if (collide(bullet[i].x_bullet - 6, bullet[i].y_bullet - 6, bullet[i].x_bullet + 6, bullet[i].y_bullet + 6, i1.x - 40, i1.y - 40, i1.x + 40, i1.y + 40) && i1.vida != 0) {
-                            bullet[i].estado = 0;
+                        for (int in = 0; in < 5; in++) {
+                            if (collide(bullet[i].x_bullet - 6, bullet[i].y_bullet - 6,
+                                bullet[i].x_bullet + 6, bullet[i].y_bullet + 6,
+                                (*arr_inimigos[in]).x - 40, (*arr_inimigos[in]).y - 40,
+                                (*arr_inimigos[in]).x + 40, (*arr_inimigos[in]).y + 40)
+                                && (*arr_inimigos[in]).vida > 0) {
+
+                                bullet[i].estado = 0;
+                                (*arr_inimigos[in]).vida -= 10;
+                                break;
+                            }
                         }
+
+
 
                     }
                 }
