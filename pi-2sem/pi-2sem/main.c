@@ -293,6 +293,10 @@ int main()
 
                             bullet[i].estado = 0;
                         }
+                        if (collide(bullet[i].x_bullet - 6, bullet[i].y_bullet - 6, bullet[i].x_bullet + 6, bullet[i].y_bullet + 6, i1.x - 40, i1.y - 40, i1.x + 40, i1.y + 40) && i1.vida != 0) {
+                            bullet[i].estado = 0;
+                        }
+
                     }
                 }
 
@@ -386,7 +390,10 @@ int main()
                     black
                 );
             }
+           
         }
+
+      
         //esconde o cursor da tela
         //al_hide_mouse_cursor(display);
 
