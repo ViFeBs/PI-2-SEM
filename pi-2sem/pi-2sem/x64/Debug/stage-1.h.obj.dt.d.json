@@ -1,17 +1,20 @@
 {
     "Version": "1.2",
     "Data": {
-        "Source": "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\allegro_font.h",
+        "Source": "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\pi-2sem\\stage-1.h",
         "ProvidedModule": "",
         "Includes": [
-            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\allegro.h",
-            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\base.h",
-            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\errno.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\stdio.h",
             "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt.h",
             "g:\\vsstudio\\produto\\vc\\tools\\msvc\\14.51.36231\\include\\vcruntime.h",
             "g:\\vsstudio\\produto\\vc\\tools\\msvc\\14.51.36231\\include\\sal.h",
             "g:\\vsstudio\\produto\\vc\\tools\\msvc\\14.51.36231\\include\\concurrencysal.h",
             "g:\\vsstudio\\produto\\vc\\tools\\msvc\\14.51.36231\\include\\vadefs.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt_wstdio.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt_stdio_config.h",
+            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\allegro.h",
+            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\base.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\errno.h",
             "g:\\vsstudio\\produto\\vc\\tools\\msvc\\14.51.36231\\include\\limits.h",
             "g:\\vsstudio\\produto\\vc\\tools\\msvc\\14.51.36231\\include\\stdarg.h",
             "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\stddef.h",
@@ -84,7 +87,14 @@
             "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\timer.h",
             "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\tls.h",
             "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\alcompat.h",
-            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\platform\\alwin.h"
+            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\platform\\alwin.h",
+            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\allegro_primitives.h",
+            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\internal\\aintern_primitives_types.h",
+            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\allegro_image.h",
+            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\packages\\allegro.5.2.11.3\\build\\native\\include\\allegro5\\allegro_font.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\math.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt_math.h",
+            "e:\\projetos\\projetos git\\pi-2-sem\\pi-2sem\\pi-2sem\\structs.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []
