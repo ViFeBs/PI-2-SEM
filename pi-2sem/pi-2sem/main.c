@@ -61,6 +61,7 @@ void mostraInimigos(char* arr) {
 
 }
 
+
 static void getInimigos(Inimigo inimigo) {
     //printf("%c", inimigo);
     int i;
@@ -173,6 +174,7 @@ int main()
 
     Inimigo* arr_inimigos[5] = {&i1, &i2, &i3, &i4, &i5};
 
+    float enemyX, enemyY;
     //ativa o timer
     al_start_timer(timer);
 
@@ -254,6 +256,14 @@ int main()
 
 
             case ALLEGRO_EVENT_TIMER:
+
+                //move inimigos
+                enemyX = p1.x - i1.x;
+                enemyY = p1.y - i1.y;
+                float angulo = atan2(enemyY, enemyX);
+                i1.x += cos(angulo) * 4;
+                i1.y += sin(angulo) * 4;
+
                 //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
                 if (key[ALLEGRO_KEY_W]) 
                     if (p1.y > 50)
@@ -271,11 +281,7 @@ int main()
                     }else
                         p1.x += p1.speed;
 
-                if (key[ALLEGRO_KEY_E])
-                    if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720) && checkar())
-                        condicao = true;
-                    else
-                        p1.life = p1.life - 40;
+                
                 // movimentação de todas as balas ativas
                 for (int i = 0; i < MAX_BALAS; i++) {
 
@@ -383,6 +389,14 @@ int main()
                 break;
 
             case ALLEGRO_EVENT_KEY_DOWN:
+                if (event.keyboard.keycode == ALLEGRO_KEY_E)
+                    if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720)) {
+                        if (checkar())
+                            condicao = true;
+                        else
+                            p1.life = p1.life - 40;
+                    }
+
                 key[event.keyboard.keycode] = KEY_SEEN | KEY_DOWN;
                 break;
             case ALLEGRO_EVENT_KEY_UP:
@@ -405,6 +419,9 @@ int main()
             }
            
         }
+
+        //move os inimigos na direção do jogador
+        
 
       
         //esconde o cursor da tela
