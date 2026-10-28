@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
-#include <allegro5/allegro.h>
+ #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/keyboard.h>
@@ -20,10 +20,6 @@ bool inventarioCheio;
 #define KEY_SEEN     1
 #define KEY_DOWN     2
 #define MAX_BALAS 100
-
-//objetos
-
-
 
 
 //funções
@@ -216,6 +212,9 @@ int main()
         if (fase == 1) {
             fase_1(i1, i2, i3, i4, i5, font, black, blue, red, green, yellow, condicao, p1, image, inventarioCheio);
         }
+        if (fase == 2) {
+            al_draw_bitmap(image, p1.x - 50, p1.y - 50, 0);
+        }
         if (fase > 0) {
             switch (event.type)
             {
@@ -223,10 +222,10 @@ int main()
 
                     //move inimigos
                     i1  = moveInimigos(i1, p1);
-                    i2 = moveInimigos(i2, p1);
-                    i3 = moveInimigos(i3, p1);
-                    i4 = moveInimigos(i4, p1);
-                    i5 = moveInimigos(i5, p1);
+                    //i2 = moveInimigos(i2, p1);
+                    //i3 = moveInimigos(i3, p1);
+                    //i4 = moveInimigos(i4, p1);
+                    //i5 = moveInimigos(i5, p1);
 
                     //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
                     if (key[ALLEGRO_KEY_W])
@@ -236,16 +235,27 @@ int main()
                         if (p1.y < 670)
                             p1.y += p1.speed;
                     if (key[ALLEGRO_KEY_A])
-                        if (p1.x > 50)
+                        if (fase != 1) {
                             p1.x -= p1.speed;
+                            if (p1.x < 0) {
+                                fase--;
+                                p1.x = 1280;
+                            }
+                        }
+                        else if (p1.x > 50)
+                                p1.x -= p1.speed;
                     if (key[ALLEGRO_KEY_D])
                         if (!condicao) {
                             if ((p1.x < 670))
                                 p1.x += p1.speed;
                         }
-                        else
+                        else {
                             p1.x += p1.speed;
-
+                        }
+                        if (p1.x > 1280) {
+                            fase++;
+                            p1.x = 0;
+                        }
 
                     // movimentação de todas as balas ativas
                     for (int i = 0; i < MAX_BALAS; i++) {
