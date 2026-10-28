@@ -1,5 +1,2 @@
 ﻿  main.c
-  stage-1.c
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\stage-1.c(44,9): warning C4013: 'collide' indefinido; assumindo extern retornando int
-  Gerando Código...
   pi-2sem.vcxproj -> E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\x64\Debug\pi-2sem.exe

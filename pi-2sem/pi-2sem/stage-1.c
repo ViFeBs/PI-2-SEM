@@ -2,7 +2,7 @@
 #include "stage-1.h"
 #include <string.h>
 
-void fase_1(Inimigo i1, Inimigo i2, Inimigo i3, Inimigo i4, Inimigo i5, ALLEGRO_FONT* font, ALLEGRO_COLOR black, ALLEGRO_COLOR blue, ALLEGRO_COLOR red, ALLEGRO_COLOR green, ALLEGRO_COLOR yellow, bool condicao, Player p1, float enemyX, float enemyY, ALLEGRO_BITMAP* image, bool inventarioCheio) {
+void fase_1(Inimigo i1, Inimigo i2, Inimigo i3, Inimigo i4, Inimigo i5, ALLEGRO_FONT* font, ALLEGRO_COLOR black, ALLEGRO_COLOR blue, ALLEGRO_COLOR red, ALLEGRO_COLOR green, ALLEGRO_COLOR yellow, bool condicao, Player p1,ALLEGRO_BITMAP* image, bool inventarioCheio) {
     if (i1.vida > 0) {
         al_draw_filled_circle(i1.x, i1.y, 50, blue);
         //colisão
