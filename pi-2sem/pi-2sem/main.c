@@ -8,36 +8,28 @@
 #include <allegro5/allegro_font.h>
 #include <math.h>
 #include <string.h>
+#include "Structs.h"
+#include "stage-1.h"
 
 
-float calcula_distancia(float dx, float dy) {
-    return sqrt((dx * dx) + (dy * dy));
-}
-
-typedef struct {
-    float x_bullet;
-    float y_bullet;
-
-    float dx;
-    float dy;
-
-    int estado;
-} Bullet;
-
-typedef struct Inimigo
-{
-    int x, y,vida;
-    char letra;
-} Inimigo;
-
-typedef struct Player
-{
-    int x, y, life, speed;
-} Player;
-
+//variavies globais
 char inimigosCapturados[2];
 int contador;
 bool inventarioCheio;
+
+#define KEY_SEEN     1
+#define KEY_DOWN     2
+#define MAX_BALAS 100
+
+//objetos
+
+
+
+
+//funções
+float calcula_distancia(float dx, float dy) {
+    return sqrt((dx * dx) + (dy * dy));
+}
 
 void trajetoria_tiro(float y_cursor, float x_cursor,
     float y_bullet, float x_bullet, Bullet* b) {
@@ -110,6 +102,17 @@ bool checkar() {
     return false;
 }
 
+Inimigo moveInimigos(Inimigo i, Player p1) {
+    float enemyX = 0;
+    float enemyY = 0;
+    enemyX = p1.x - i.x;
+    enemyY = p1.y - i.y;
+    float angulo = atan2(enemyY, enemyX);
+    i.x += cos(angulo) * 4;
+    i.y += sin(angulo) * 4;
+    return i;
+}
+
 int main()
 {
     //intalar addons
@@ -130,6 +133,7 @@ int main()
 
     //variavel de controle do game loop
     bool running = true;
+    int fase = 0;
 
     //variaveis do puzzle
     bool condicao = false;
@@ -138,8 +142,8 @@ int main()
     struct Player p1 = { 150,500,100,10 };
 
     // Inicializando a bala e a velocidade
-#define MAX_BALAS 100
-    Bullet bullet[MAX_BALAS] = { 0 };
+    
+    Bullet bullet[MAX_BALAS] = {0};
     float velocidade_bala = 10.0f;
 
     //timer não é obrigatorio mas ele da um controle maior ao fps do game
@@ -157,9 +161,8 @@ int main()
 
     //movimentação do personagem
 
-#define KEY_SEEN     1
-#define KEY_DOWN     2
-
+    
+ 
 
 //array que define quais teclas podem ser clicadas assim evitando que o pragram cheque teclas desnecessárias
     unsigned char key[ALLEGRO_KEY_MAX];
@@ -174,20 +177,11 @@ int main()
 
     Inimigo* arr_inimigos[5] = {&i1, &i2, &i3, &i4, &i5};
 
-    float enemyX, enemyY;
+    
     //ativa o timer
     al_start_timer(timer);
 
     while (running) {
-        //game loop
-            
- 
-        //ativa os eventos
-        ALLEGRO_EVENT event;
-        al_wait_for_event(fila, &event);
-
-        //desenhar elementos na tela
-        al_clear_to_color(al_map_rgb(255, 255, 255));
 
         ALLEGRO_COLOR red = al_map_rgb(255, 0, 0);
         ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
@@ -195,111 +189,83 @@ int main()
         ALLEGRO_COLOR green = al_map_rgba(22, 255, 20, 100);
         ALLEGRO_COLOR black = al_map_rgb(0, 0, 0);
 
-        //inimigos
-        if (i1.vida > 0) {
-            al_draw_filled_circle(i1.x, i1.y, 50, blue);
-            //colisão
-            al_draw_filled_rectangle(i1.x - 40, i1.y + 40, i1.x + 40, i1.y - 40, red);
-            al_draw_text(font, black, i1.x, i1.y - 70, ALLEGRO_ALIGN_CENTER, "D");
+        //ativa os eventos
+        ALLEGRO_EVENT event;
+        al_wait_for_event(fila, &event);
+
+        //desenhar elementos na tela
+        al_clear_to_color(al_map_rgb(255, 255, 255));
+
+        //game loop
+
+        //menu
+        if (fase == 0) {
+            al_draw_filled_rectangle(600, 180, 680, 200, red);
+            al_draw_text(font, black, 640, 180, ALLEGRO_ALIGN_CENTER, "Novo Jogo");
+            switch (event.type) {
+                case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+                    if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_LEFT) {
+                        if (event.mouse.x > 600 && event.mouse.x < 680 && event.mouse.y > 180 && event.mouse.y < 200)
+                            fase = 1;
+                    };
+                    break;
+            }
+            al_flip_display();
         }
-        if (i2.vida > 0) {
-            al_draw_filled_circle(i2.x, i2.y, 50, blue);
-            al_draw_filled_rectangle(i2.x - 40, i2.y + 40, i2.x + 40, i2.y - 40, red);
-            al_draw_text(font, black, i2.x, i2.y - 70, ALLEGRO_ALIGN_CENTER, "O");
+        //fase 1
+        if (fase == 1) {
+            fase_1(i1, i2, i3, i4, i5, font, black, blue, red, green, yellow, condicao, p1, image, inventarioCheio);
         }
-        
-        if (i3.vida > 0) {
-            al_draw_filled_circle(i3.x, i3.y, 50, blue);
-            al_draw_filled_rectangle(i3.x - 40, i3.y + 40, i3.x + 40, i3.y - 40, red);
-            al_draw_text(font, black, i3.x, i3.y - 70, ALLEGRO_ALIGN_CENTER, "A");
-        }
-        
-        if (i4.vida > 0) {
-            al_draw_filled_circle(i4.x, i4.y, 50, blue);
-            al_draw_filled_rectangle(i4.x - 40, i4.y + 40, i4.x + 40, i4.y - 40, red);
-            al_draw_text(font, black, i4.x, i4.y - 70, ALLEGRO_ALIGN_CENTER, "B");
-        }
-        
-        if (i5.vida > 0) {
-            al_draw_filled_circle(i5.x, i5.y, 50, blue);
-            al_draw_filled_rectangle(i5.x - 40, i5.y + 40, i5.x + 40, i5.y - 40, red);
-            al_draw_text(font, black, i5.x, i5.y - 70, ALLEGRO_ALIGN_CENTER, "S");
-        }
-        
-        //colisão do personagem
-        //al_draw_filled_rectangle(xPersonagem - 45, yPersonagem + 47, xPersonagem + 40, yPersonagem - 44, red);
+        if (fase > 0) {
+            switch (event.type)
+            {
+                case ALLEGRO_EVENT_TIMER:
 
-        //colisão interação com a porta
-        al_draw_filled_rectangle(350, 200, 700, 720, green);
+                    //move inimigos
+                    i1  = moveInimigos(i1, p1);
+                    i2 = moveInimigos(i2, p1);
+                    i3 = moveInimigos(i3, p1);
+                    i4 = moveInimigos(i4, p1);
+                    i5 = moveInimigos(i5, p1);
 
-        //"Porta"
-        if(!condicao)
-            al_draw_filled_rectangle(700, 10, 780, 720, yellow);
-
-
-        if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720)) {
-            al_draw_text(font, black, 640, 180, ALLEGRO_ALIGN_CENTER, "How __ i open this door?");
-            al_draw_text(font, black, 640, 190, ALLEGRO_ALIGN_CENTER, "Aperte E para interagir");
-        }
-            
-        if (inventarioCheio) {
-            al_draw_text(font, red, 640, 640, ALLEGRO_ALIGN_CENTER, "Inventário Cheio");
-        }
-
-        char vida[20];
-        snprintf(vida, sizeof(vida), "%d", p1.life);
-        al_draw_text(font, red, 1200, 140, ALLEGRO_ALIGN_CENTER, vida);
-
-        switch (event.type)
-        {
-
-
-
-            case ALLEGRO_EVENT_TIMER:
-
-                //move inimigos
-                enemyX = p1.x - i1.x;
-                enemyY = p1.y - i1.y;
-                float angulo = atan2(enemyY, enemyX);
-                i1.x += cos(angulo) * 4;
-                i1.y += sin(angulo) * 4;
-
-                //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
-                if (key[ALLEGRO_KEY_W]) 
-                    if (p1.y > 50)
-                        p1.y -= p1.speed;
-                if (key[ALLEGRO_KEY_S])
-                    if(p1.y < 670)
-                        p1.y += p1.speed;
-                if (key[ALLEGRO_KEY_A])
-                    if(p1.x > 50)
-                        p1.x -= p1.speed;
-                if (key[ALLEGRO_KEY_D])
-                    if (!condicao) {
-                        if ((p1.x < 670))
+                    //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
+                    if (key[ALLEGRO_KEY_W])
+                        if (p1.y > 50)
+                            p1.y -= p1.speed;
+                    if (key[ALLEGRO_KEY_S])
+                        if (p1.y < 670)
+                            p1.y += p1.speed;
+                    if (key[ALLEGRO_KEY_A])
+                        if (p1.x > 50)
+                            p1.x -= p1.speed;
+                    if (key[ALLEGRO_KEY_D])
+                        if (!condicao) {
+                            if ((p1.x < 670))
+                                p1.x += p1.speed;
+                        }
+                        else
                             p1.x += p1.speed;
-                    }else
-                        p1.x += p1.speed;
 
-                
-                // movimentação de todas as balas ativas
-                for (int i = 0; i < MAX_BALAS; i++) {
 
-                    if (bullet[i].estado == 1) {
+                    // movimentação de todas as balas ativas
+                    for (int i = 0; i < MAX_BALAS; i++) {
 
-                        bullet[i].x_bullet +=
-                            bullet[i].dx * velocidade_bala;
+                        if (bullet[i].estado == 1) {
 
-                        bullet[i].y_bullet +=
-                            bullet[i].dy * velocidade_bala;
+                            bullet[i].x_bullet +=
+                                bullet[i].dx * velocidade_bala;
 
-                        // verifica se a bala saiu da tela
-                        if (bullet[i].x_bullet < 0 ||
-                            bullet[i].x_bullet > 1280 ||
-                            bullet[i].y_bullet < 0 ||
-                            bullet[i].y_bullet > 720) {
+                            bullet[i].y_bullet +=
+                                bullet[i].dy * velocidade_bala;
 
-                            bullet[i].estado = 0;
+                            // verifica se a bala saiu da tela
+                            if (bullet[i].x_bullet < 0 ||
+                                bullet[i].x_bullet > 1280 ||
+                                bullet[i].y_bullet < 0 ||
+                                bullet[i].y_bullet > 720) {
+
+                                bullet[i].estado = 0;
+                            }
                         }
                         for (int in = 0; in < 5; in++) {
                             if (collide(bullet[i].x_bullet - 6, bullet[i].y_bullet - 6,
@@ -317,120 +283,108 @@ int main()
 
 
                     }
-                }
 
-                if (key[ALLEGRO_KEY_ESCAPE])
+                    if (key[ALLEGRO_KEY_ESCAPE])
+                        running = false;
+
+                    for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
+                        key[i] &= ~KEY_SEEN;
+                    break;
+
+
+                case ALLEGRO_EVENT_MOUSE_AXES:
+                    al_draw_line(p1.x, p1.y, event.mouse.x, event.mouse.y, red, 5);
+                    break;
+
+                case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+                    if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_RIGHT) {
+                        if (event.mouse.x > (i1.x - 40) && event.mouse.x < (i1.x + 40) && event.mouse.y >(i1.y - 40) && event.mouse.y < (i1.y + 40)) {
+                            if ((i1.vida > 0) && !inventarioCheio) {
+                                getInimigos(i1);
+                                i1.vida = 0;
+                            }
+                        }
+                        if (event.mouse.x > (i2.x - 40) && event.mouse.x < (i2.x + 40) && event.mouse.y >(i2.y - 40) && event.mouse.y < (i2.y + 40)) {
+                            if ((i2.vida > 0) && !inventarioCheio) {
+                                getInimigos(i2);
+                                i2.vida = 0;
+                            }
+                        }
+                        if (event.mouse.x > (i3.x - 40) && event.mouse.x < (i3.x + 40) && event.mouse.y >(i3.y - 40) && event.mouse.y < (i3.y + 40)) {
+                            if ((i3.vida > 0) && !inventarioCheio) {
+                                getInimigos(i3);
+                                i3.vida = 0;
+                            }
+                        }
+                        if (event.mouse.x > (i4.x - 40) && event.mouse.x < (i4.x + 40) && event.mouse.y >(i4.y - 40) && event.mouse.y < (i4.y + 40)) {
+                            if ((i4.vida > 0) && !inventarioCheio) {
+                                getInimigos(i4);
+                                i4.vida = 0;
+                            }
+                        }
+                        if (event.mouse.x > (i5.x - 40) && event.mouse.x < (i5.x + 40) && event.mouse.y >(i5.y - 40) && event.mouse.y < (i5.y + 40)) {
+                            if ((i5.vida > 0) && !inventarioCheio) {
+                                getInimigos(i5);
+                                i5.vida = 0;
+                            }
+                        }
+                        //printf("Mouse Clicado");
+                    }
+                    if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_LEFT) {
+
+                        for (int i = 0; i < MAX_BALAS; i++) {
+
+                            if (bullet[i].estado == 0) {
+
+                                bullet[i].x_bullet = p1.x;
+                                bullet[i].y_bullet = p1.y;
+
+                                trajetoria_tiro(
+                                    event.mouse.y,
+                                    event.mouse.x,
+                                    bullet[i].y_bullet,
+                                    bullet[i].x_bullet,
+                                    &bullet[i]
+                                );
+
+                                break;
+                            }
+                        }
+                    };
+                    break;
+
+                case ALLEGRO_EVENT_KEY_DOWN:
+                    if (event.keyboard.keycode == ALLEGRO_KEY_E)
+                        if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720)) {
+                            if (checkar())
+                                condicao = true;
+                            else
+                                p1.life = p1.life - 40;
+                        }
+
+                    key[event.keyboard.keycode] = KEY_SEEN | KEY_DOWN;
+                    break;
+                case ALLEGRO_EVENT_KEY_UP:
+                    key[event.keyboard.keycode] &= ~KEY_DOWN;
+                    break;
+
+                case ALLEGRO_EVENT_DISPLAY_CLOSE:
                     running = false;
-
-                for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
-                    key[i] &= ~KEY_SEEN;
-                break;
-
-
-            case ALLEGRO_EVENT_MOUSE_AXES:
-                al_draw_line(p1.x, p1.y, event.mouse.x, event.mouse.y, red, 5);
-                break;
-
-            case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
-                if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_RIGHT) {
-                    if (event.mouse.x > (i1.x - 40) && event.mouse.x < (i1.x + 40) && event.mouse.y > (i1.y - 40) && event.mouse.y < (i1.y + 40)) {
-                        if ((i1.vida > 0) && !inventarioCheio) {
-                            getInimigos(i1);
-                            i1.vida = 0;
-                        } 
-                    }
-                    if (event.mouse.x > (i2.x - 40) && event.mouse.x < (i2.x + 40) && event.mouse.y >(i2.y - 40) && event.mouse.y < (i2.y + 40)) {
-                        if ((i2.vida > 0) && !inventarioCheio) {
-                            getInimigos(i2);
-                            i2.vida = 0;
-                        }   
-                    }
-                    if (event.mouse.x > (i3.x - 40) && event.mouse.x < (i3.x + 40) && event.mouse.y > (i3.y - 40) && event.mouse.y < (i3.y + 40)) {
-                        if ((i3.vida > 0) && !inventarioCheio) {
-                            getInimigos(i3);
-                            i3.vida = 0;
-                        }      
-                    }
-                    if (event.mouse.x > (i4.x - 40) && event.mouse.x < (i4.x + 40) && event.mouse.y >(i4.y - 40) && event.mouse.y < (i4.y + 40)) {
-                        if ((i4.vida > 0) && !inventarioCheio) {
-                            getInimigos(i4);
-                            i4.vida = 0;
-                        }                     
-                    }
-                    if (event.mouse.x > (i5.x - 40) && event.mouse.x < (i5.x + 40) && event.mouse.y >(i5.y - 40) && event.mouse.y < (i5.y + 40)) {
-                        if ((i5.vida > 0) && !inventarioCheio) {
-                            getInimigos(i5);
-                            i5.vida = 0;
-                        }
-                    }
-                    //printf("Mouse Clicado");
+                    break;
+            }
+            // desenha todas as balas ativas
+            for (int i = 0; i < MAX_BALAS; i++) {
+                if (bullet[i].estado == 1) {
+                    al_draw_filled_circle(
+                        bullet[i].x_bullet,
+                        bullet[i].y_bullet,
+                        6,
+                        black
+                    );
                 }
-                if (event.mouse.button == ALLEGRO_MOUSE_BUTTON_LEFT) {
-
-                    for (int i = 0; i < MAX_BALAS; i++) {
-
-                        if (bullet[i].estado == 0) {
-
-                            bullet[i].x_bullet = p1.x;
-                            bullet[i].y_bullet = p1.y;
-
-                            trajetoria_tiro(
-                                event.mouse.y,
-                                event.mouse.x,
-                                bullet[i].y_bullet,
-                                bullet[i].x_bullet,
-                                &bullet[i]
-                            );
-
-                            break;
-                        }
-                    }
-                };
-                break;
-
-            case ALLEGRO_EVENT_KEY_DOWN:
-                if (event.keyboard.keycode == ALLEGRO_KEY_E)
-                    if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720)) {
-                        if (checkar())
-                            condicao = true;
-                        else
-                            p1.life = p1.life - 40;
-                    }
-
-                key[event.keyboard.keycode] = KEY_SEEN | KEY_DOWN;
-                break;
-            case ALLEGRO_EVENT_KEY_UP:
-                key[event.keyboard.keycode] &= ~KEY_DOWN;
-                break;
-
-            case ALLEGRO_EVENT_DISPLAY_CLOSE:
-                running = false;
-                break;
-        }
-        // desenha todas as balas ativas
-        for (int i = 0; i < MAX_BALAS; i++) {
-            if (bullet[i].estado == 1) {
-                al_draw_filled_circle(
-                    bullet[i].x_bullet,
-                    bullet[i].y_bullet,
-                    6,
-                    black
-                );
             }
            
         }
-
-        //move os inimigos na direção do jogador
-        
-
-      
-        //esconde o cursor da tela
-        //al_hide_mouse_cursor(display);
-
-
-        //desenha a imagem na tela
-        al_draw_bitmap(image, p1.x - 50, p1.y - 50, 0);
-       
         //atualiza os elementos graficos da tela
         al_flip_display();
     }
