@@ -220,10 +220,10 @@ int main()
 
                     //move inimigos
                     i1  = moveInimigos(i1, p1);
-                    i2 = moveInimigos(i2, p1);
-                    i3 = moveInimigos(i3, p1);
-                    i4 = moveInimigos(i4, p1);
-                    i5 = moveInimigos(i5, p1);
+                    //i2 = moveInimigos(i2, p1);
+                    //i3 = moveInimigos(i3, p1);
+                    //i4 = moveInimigos(i4, p1);
+                    //i5 = moveInimigos(i5, p1);
 
                     //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
                     if (key[ALLEGRO_KEY_W])
@@ -233,8 +233,15 @@ int main()
                         if (p1.y < 670)
                             p1.y += p1.speed;
                     if (key[ALLEGRO_KEY_A])
-                        if (p1.x > 50)
+                        if (fase != 1) {
                             p1.x -= p1.speed;
+                            if (p1.x < 0) {
+                                fase--;
+                                p1.x = 1280;
+                            }
+                        }
+                        else if (p1.x > 50)
+                                p1.x -= p1.speed;
                     if (key[ALLEGRO_KEY_D])
                         if (!condicao) {
                             if ((p1.x < 670))
