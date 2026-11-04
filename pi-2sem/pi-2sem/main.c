@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
- #include <allegro5/allegro.h>
+#include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/keyboard.h>
@@ -106,38 +106,39 @@ bool checkar() {
 
 bool verificaColisao(Inimigo *arr[], Inimigo i1,int qtd,int pos) {
     ALLEGRO_COLOR yellow = al_map_rgb(227, 176, 36);
-    //al_draw_filled_rectangle(i1.x - 40, i1.y - 40, i1.x + 40, i1.y + 40, yellow);
     
     for (int i = 0; qtd > i; i++) {
         if (pos == i) continue;
-        al_draw_filled_rectangle((*arr[i]).x - 40, (*arr[i]).y - 40, (*arr[i]).x + 40, (*arr[i]).y + 40, yellow);
+        if ((*arr[i]).vida <= 0) continue;
+        if ((*arr[i]).vida > 0) al_draw_filled_rectangle((*arr[i]).x - 40, (*arr[i]).y - 40, (*arr[i]).x + 40, (*arr[i]).y + 40, yellow);
         if (collide(i1.x - 40, i1.y - 40, i1.x + 40, i1.y + 40, (*arr[i]).x - 40, (*arr[i]).y - 40, (*arr[i]).x + 40, (*arr[i]).y + 40)) {
             return true;
             printf("colidirão");
         }
-        //printf("%d", arr[i].x);
-        //printf("%c", arr[i].y);
     }
     
     return false;
 }
 
 Inimigo moveInimigos(Inimigo i, Player p1, float v, Inimigo* arr, int qtd, int pos) {
-    float enemyX = 0;
-    float enemyY = 0;
-    enemyX = p1.x - i.x;
-    enemyY = p1.y - i.y;
-    float angulo = atan2(enemyY, enemyX);
-    Inimigo teste = i;
-    teste.x = i.x + cos(angulo) * v;
-    if (!verificaColisao(arr, teste,qtd,pos))
-        i.x = teste.x;
+    if (i.vida > 0) {
+        float enemyX = 0;
+        float enemyY = 0;
+        enemyX = p1.x - i.x;
+        enemyY = p1.y - i.y;
+        float angulo = atan2(enemyY, enemyX);
+        Inimigo teste = i;
+        teste.x = i.x + cos(angulo) * v;
+        if (!verificaColisao(arr, teste, qtd, pos))
+            i.x = teste.x;
 
-    teste = i;
-    teste.y = i.y + sin(angulo) * v;
-    if (!verificaColisao(arr, teste,qtd,pos))
-        i.y = teste.y;
+        teste = i;
+        teste.y = i.y + sin(angulo) * v;
+        if (!verificaColisao(arr, teste, qtd, pos))
+            i.y = teste.y;
 
+        return i;
+    }
     return i;
 }
 
@@ -170,6 +171,7 @@ int main()
 
     //Variaveis do personagem
     struct Player p1 = { 150,500,100,10 };
+    int lifebar = 300;
 
     // Inicializando a bala e a velocidade
     
@@ -244,7 +246,7 @@ int main()
         }
         //fase 1
         if (fase == 1) {
-            fase_1(i1, i2, i3, i4, i5, font, black, blue, red, green, yellow, condicao, p1, image, inventarioCheio);
+            fase_1(i1, i2, i3, i4, i5, font, black, blue, red, green, yellow, condicao, p1, image, inventarioCheio, lifebar);
         }
         if (fase == 2) {
             condicao = false;
@@ -327,10 +329,11 @@ int main()
                                 (*arr_inimigos[in]).x + 40, (*arr_inimigos[in]).y + 40)
                                 && (*arr_inimigos[in]).vida > 0) {
 
-                                bullet[i].estado = 0;
-                                (*arr_inimigos[in]).vida -= 10;
-                                break;
-                            }
+                                    bullet[i].estado = 0;
+                                    (*arr_inimigos[in]).vida -= 10;
+
+                                    break;
+                                }
                         }
 
 

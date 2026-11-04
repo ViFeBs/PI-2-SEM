@@ -2,7 +2,7 @@
 #include "stage-1.h"
 #include <string.h>
 
-void fase_1(Inimigo i1, Inimigo i2, Inimigo i3, Inimigo i4, Inimigo i5, ALLEGRO_FONT* font, ALLEGRO_COLOR black, ALLEGRO_COLOR blue, ALLEGRO_COLOR red, ALLEGRO_COLOR green, ALLEGRO_COLOR yellow, bool condicao, Player p1,ALLEGRO_BITMAP* image, bool inventarioCheio) {
+void fase_1(Inimigo i1, Inimigo i2, Inimigo i3, Inimigo i4, Inimigo i5, ALLEGRO_FONT* font, ALLEGRO_COLOR black, ALLEGRO_COLOR blue, ALLEGRO_COLOR red, ALLEGRO_COLOR green, ALLEGRO_COLOR yellow, bool condicao, Player p1,ALLEGRO_BITMAP* image, bool inventarioCheio, int lifebar) {
     if (i1.vida > 0) {
         al_draw_filled_circle(i1.x, i1.y, 50, blue);
         //colisão
@@ -50,10 +50,22 @@ void fase_1(Inimigo i1, Inimigo i2, Inimigo i3, Inimigo i4, Inimigo i5, ALLEGRO_
         al_draw_text(font, red, 640, 640, ALLEGRO_ALIGN_CENTER, "Inventário Cheio");
     }
 
+    ALLEGRO_COLOR darkred = al_map_rgb(150, 2, 2);
+    ALLEGRO_COLOR white = al_map_rgb(255, 255, 255);
     char vida[20];
     snprintf(vida, sizeof(vida), "%d", p1.life);
-    al_draw_text(font, red, 1200, 140, ALLEGRO_ALIGN_CENTER, vida);
+    
 
+    if (p1.life > 0) {
+        float lifebarfim = 50 + (p1.life / 100.0f) * 250.0f;
+        printf("%d", lifebar);
+        al_draw_filled_rectangle(50, 50, 300, 70, darkred);
+        al_draw_filled_rectangle(50, 50, lifebarfim, 70, red);
+    }
+    
+    
+    al_draw_text(font, white, 175, 55, ALLEGRO_ALIGN_CENTER, vida);
+    al_draw_text(font, black, 40, 55, ALLEGRO_ALIGN_CENTER, "HP: ");
 
 
     al_draw_bitmap(image, p1.x - 50, p1.y - 50, 0);
