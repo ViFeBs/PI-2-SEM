@@ -34,11 +34,11 @@ void fase_1(Inimigo i1, Inimigo i2, Inimigo i3, Inimigo i4, Inimigo i5, ALLEGRO_
     }
 
     //colisão interação com a porta
-    al_draw_filled_rectangle(350, 200, 700, 720, green);
+    al_draw_filled_rectangle(900, 200, 1200, 720, green);
 
     //"Porta"
     if (!condicao)
-        al_draw_filled_rectangle(700, 10, 780, 720, yellow);
+        al_draw_filled_rectangle(1200, 10, 1280, 720, yellow);
 
 
     if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720)) {

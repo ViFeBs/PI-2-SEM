@@ -49,6 +49,12 @@ void mostraInimigos(char* arr) {
 
 }
 
+void  limpaInventario() {
+    for (int i = 0; sizeof(inimigosCapturados) > i; i++) {
+        inimigosCapturados[i] = 0;
+        inventarioCheio = false;
+    }
+}
 
 static void getInimigos(Inimigo inimigo) {
     //printf("%c", inimigo);
@@ -98,16 +104,44 @@ bool checkar() {
     return false;
 }
 
-Inimigo moveInimigos(Inimigo i, Player p1) {
+bool verificaColisao(Inimigo *arr[], Inimigo i1,int qtd,int pos) {
+    ALLEGRO_COLOR yellow = al_map_rgb(227, 176, 36);
+    //al_draw_filled_rectangle(i1.x - 40, i1.y - 40, i1.x + 40, i1.y + 40, yellow);
+    
+    for (int i = 0; qtd > i; i++) {
+        if (pos == i) continue;
+        al_draw_filled_rectangle((*arr[i]).x - 40, (*arr[i]).y - 40, (*arr[i]).x + 40, (*arr[i]).y + 40, yellow);
+        if (collide(i1.x - 40, i1.y - 40, i1.x + 40, i1.y + 40, (*arr[i]).x - 40, (*arr[i]).y - 40, (*arr[i]).x + 40, (*arr[i]).y + 40)) {
+            return true;
+            printf("colidirão");
+        }
+        //printf("%d", arr[i].x);
+        //printf("%c", arr[i].y);
+    }
+    
+    return false;
+}
+
+Inimigo moveInimigos(Inimigo i, Player p1, float v, Inimigo* arr, int qtd, int pos) {
     float enemyX = 0;
     float enemyY = 0;
     enemyX = p1.x - i.x;
     enemyY = p1.y - i.y;
     float angulo = atan2(enemyY, enemyX);
-    i.x += cos(angulo) * 4;
-    i.y += sin(angulo) * 4;
+    Inimigo teste = i;
+    teste.x = i.x + cos(angulo) * v;
+    if (!verificaColisao(arr, teste,qtd,pos))
+        i.x = teste.x;
+
+    teste = i;
+    teste.y = i.y + sin(angulo) * v;
+    if (!verificaColisao(arr, teste,qtd,pos))
+        i.y = teste.y;
+
     return i;
 }
+
+
 
 int main()
 {
@@ -173,7 +207,7 @@ int main()
 
     Inimigo* arr_inimigos[5] = {&i1, &i2, &i3, &i4, &i5};
 
-    
+
     //ativa o timer
     al_start_timer(timer);
 
@@ -213,6 +247,13 @@ int main()
             fase_1(i1, i2, i3, i4, i5, font, black, blue, red, green, yellow, condicao, p1, image, inventarioCheio);
         }
         if (fase == 2) {
+            condicao = false;
+            //colisão interação com a porta
+            al_draw_filled_rectangle(900, 200, 1200, 720, green);
+
+            //"Porta"
+            if (!condicao)
+                al_draw_filled_rectangle(1200, 10, 1280, 720, yellow);
             al_draw_bitmap(image, p1.x - 50, p1.y - 50, 0);
         }
         if (fase > 0) {
@@ -221,11 +262,12 @@ int main()
                 case ALLEGRO_EVENT_TIMER:
 
                     //move inimigos
-                    i1  = moveInimigos(i1, p1);
-                    //i2 = moveInimigos(i2, p1);
-                    //i3 = moveInimigos(i3, p1);
-                    //i4 = moveInimigos(i4, p1);
-                    //i5 = moveInimigos(i5, p1);
+
+                    i1 = moveInimigos(i1, p1,4, arr_inimigos, 5, 0);
+                    i2 = moveInimigos(i2, p1,3, arr_inimigos, 5, 1);
+                    i3 = moveInimigos(i3, p1,5, arr_inimigos, 5, 2);
+                    i4 = moveInimigos(i4, p1,2, arr_inimigos, 5, 3);
+                    i5 = moveInimigos(i5, p1,3.5, arr_inimigos, 5, 4);
 
                     //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
                     if (key[ALLEGRO_KEY_W])
@@ -240,13 +282,14 @@ int main()
                             if (p1.x < 0) {
                                 fase--;
                                 p1.x = 1280;
+                                condicao = true;
                             }
                         }
                         else if (p1.x > 50)
                                 p1.x -= p1.speed;
                     if (key[ALLEGRO_KEY_D])
                         if (!condicao) {
-                            if ((p1.x < 670))
+                            if ((p1.x < 1280))
                                 p1.x += p1.speed;
                         }
                         else {
@@ -365,9 +408,11 @@ int main()
 
                 case ALLEGRO_EVENT_KEY_DOWN:
                     if (event.keyboard.keycode == ALLEGRO_KEY_E)
-                        if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720)) {
-                            if (checkar())
+                        if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 900, 200, 1280, 720)) {
+                            if (checkar()) {
                                 condicao = true;
+                                limpaInventario();
+                            }
                             else
                                 p1.life = p1.life - 40;
                         }
