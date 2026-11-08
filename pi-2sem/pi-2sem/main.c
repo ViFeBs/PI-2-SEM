@@ -14,6 +14,7 @@
 
 //variavies globais
 char inimigosCapturados[2];
+char inimigosPrioridade[2];
 int contador;
 bool inventarioCheio;
 
@@ -76,27 +77,7 @@ bool collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int 
     return true;
 }
 
-//função checkar puzzle
-bool checkar() {
-    int corretos = 0;
-    for (int i = 0; sizeof(inimigosCapturados) > i; i++) {
-        if (inimigosCapturados[i] == 68) {
-            corretos++;
-        }
-        else if (inimigosCapturados[i] == 79) {
-            corretos++;
-        }
-        else {
-            inimigosCapturados[i] = 0;
-            contador--;
-            inventarioCheio = false;
-        }
-    }
-    if (corretos == 2)
-        return true;
 
-    return false;
-}
 
 
 
@@ -268,6 +249,43 @@ void animaInimigos(Inimigo* arr[], ALLEGRO_BITMAP* alfabeto) {
             0                                   // Flags (ex: ALLEGRO_FLIP_HORIZONTAL)
         );
     }
+}
+
+void reviveInimigos(char* inimigosPrioridade, Inimigo* arr[], int qtd) {
+    for (int i = 0; i < qtd; i++) {
+        for (int j = 0; j < sizeof(inimigosPrioridade); j++) {
+            if (arr[i]->letra != inimigosPrioridade[j]) continue;
+            if (arr[i]->vida <= 0) {
+                arr[i]->vida = 100;
+            }
+        }
+    }
+}
+
+//função checkar puzzle
+bool checkar(Inimigo* arr[]) {
+    int corretos = 0;
+    for (int i = 0; sizeof(inimigosCapturados) > i; i++) {
+        if (inimigosCapturados[i] == 68) {
+            corretos++;
+        }
+        else if (inimigosCapturados[i] == 79) {
+            corretos++;
+        }
+        else {
+            inimigosCapturados[i] = 0;
+            contador--;
+            inventarioCheio = false;
+        }
+    }
+    if (corretos == 2)
+        return true;
+
+    inimigosPrioridade[0] = 'D';
+    inimigosPrioridade[1] = 'O';
+    reviveInimigos(inimigosPrioridade, arr, 5);
+
+    return false;
 }
 
 int main()
@@ -557,7 +575,7 @@ int main()
                 case ALLEGRO_EVENT_KEY_DOWN:
                     if (event.keyboard.keycode == ALLEGRO_KEY_E)
                         if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 900, 200, 1280, 720)) {
-                            if (checkar()) {
+                            if (checkar(arr_inimigos)) {
                                 condicao = true;
                                 limpaInventario(alfabeto);
                             }
