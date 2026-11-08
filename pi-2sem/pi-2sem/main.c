@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
- #include <allegro5/allegro.h>
+#include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/keyboard.h>
@@ -49,12 +49,6 @@ void mostraInimigos(char* arr) {
 
 }
 
-void  limpaInventario() {
-    for (int i = 0; sizeof(inimigosCapturados) > i; i++) {
-        inimigosCapturados[i] = 0;
-        inventarioCheio = false;
-    }
-}
 
 static void getInimigos(Inimigo inimigo) {
     //printf("%c", inimigo);
@@ -104,44 +98,177 @@ bool checkar() {
     return false;
 }
 
+
+
 bool verificaColisao(Inimigo *arr[], Inimigo i1,int qtd,int pos) {
-    ALLEGRO_COLOR yellow = al_map_rgb(227, 176, 36);
-    //al_draw_filled_rectangle(i1.x - 40, i1.y - 40, i1.x + 40, i1.y + 40, yellow);
-    
     for (int i = 0; qtd > i; i++) {
         if (pos == i) continue;
-        al_draw_filled_rectangle((*arr[i]).x - 40, (*arr[i]).y - 40, (*arr[i]).x + 40, (*arr[i]).y + 40, yellow);
+        if ((*arr[i]).vida <= 0) continue;
         if (collide(i1.x - 40, i1.y - 40, i1.x + 40, i1.y + 40, (*arr[i]).x - 40, (*arr[i]).y - 40, (*arr[i]).x + 40, (*arr[i]).y + 40)) {
             return true;
-            printf("colidirão");
         }
-        //printf("%d", arr[i].x);
-        //printf("%c", arr[i].y);
     }
     
     return false;
 }
 
 Inimigo moveInimigos(Inimigo i, Player p1, float v, Inimigo* arr, int qtd, int pos) {
-    float enemyX = 0;
-    float enemyY = 0;
-    enemyX = p1.x - i.x;
-    enemyY = p1.y - i.y;
-    float angulo = atan2(enemyY, enemyX);
-    Inimigo teste = i;
-    teste.x = i.x + cos(angulo) * v;
-    if (!verificaColisao(arr, teste,qtd,pos))
-        i.x = teste.x;
+    if (i.vida > 0) {
+        float enemyX = 0;
+        float enemyY = 0;
+        enemyX = p1.x - i.x;
+        enemyY = p1.y - i.y;
+        float angulo = atan2(enemyY, enemyX);
+        Inimigo teste = i;
+        teste.x = i.x + cos(angulo) * v;
+        if (!verificaColisao(arr, teste, qtd, pos))
+            i.x = teste.x;
 
-    teste = i;
-    teste.y = i.y + sin(angulo) * v;
-    if (!verificaColisao(arr, teste,qtd,pos))
-        i.y = teste.y;
+        teste = i;
+        teste.y = i.y + sin(angulo) * v;
+        if (!verificaColisao(arr, teste, qtd, pos))
+            i.y = teste.y;
 
+        return i;
+    }
     return i;
 }
 
+void exibeInimigos(char* inimigos, ALLEGRO_BITMAP* alfabeto) {
+    //x 280 posicao inial do alfabeto
+    //y 25 começa o alfabeto
+    float src_x = 0;
+    float src_y = 120;
 
+    float destX = 40;
+    float destY = 70;
+    
+    //teste
+    al_draw_bitmap_region(
+        alfabeto,                           // A sprite sheet carregada
+        0, 120,                             // Posição X e Y do quadro na imagem original
+        14,                                 // Largura do recorte
+        20,                                 // Altura do recorte
+        destX + 40, destY,                  // Onde desenhar na tela
+        0                                   // Flags (ex: ALLEGRO_FLIP_HORIZONTAL)
+    );
+
+    for (int i = 0; sizeof(inimigos) > i; i++) {
+        char c = inimigos[i];
+        if (c >= 'A' && c <= 'Z') {
+            int indice = c - 'A';              // A=0, B=1, ... Z=25
+
+            if (c <= 'I') {
+                // primeira linha: A-I
+                src_x = (indice * 14);
+            }
+            else if (c <= 'R'){
+                src_x = (c - 'J') * 14;
+                src_y = 140;
+            }
+            else {
+                src_x = ((c - 'S') * 14);
+                src_y = 160;
+            }
+
+            al_draw_scaled_bitmap(
+                alfabeto,                           // A sprite sheet carregada
+                src_x, src_y,                       // Posição X e Y do quadro na imagem original
+                14,                                 // Largura do recorte
+                20,                                 // Altura do recorte
+                destX, destY,                       // Onde desenhar na tela
+                14 * 3.0, 20 * 3.0,                 // Escala
+                0                                   // Flags (ex: ALLEGRO_FLIP_HORIZONTAL)
+            );
+        }
+        destX += 14 * 3.0;                      // avança para a próxima letra (espaços também avançam)
+    }
+}
+
+void verificaAtaque(Inimigo* arr[], Player* p1) {
+    for (int i = 0; i < 5; i++) {
+        if ((*arr[i]).vida <= 0) continue;
+        if (collide((*p1).x - 40, (*p1).y - 40, (*p1).x + 40, (*p1).y + 40, (*arr[i]).x - 40, (*arr[i]).y - 40, (*arr[i]).x + 40, (*arr[i]).y + 40)) {
+            (*p1).life--;
+        }
+    }
+}
+
+void resetaInimigos(Inimigo* i1, Inimigo* i2, Inimigo* i3, Inimigo* i4, Inimigo* i5) {
+    (*i1).x = 150;
+    (*i1).y = 120;
+    (*i1).vida = 100;
+
+    (*i2).x = 260;
+    (*i2).y = 120;
+    (*i2).vida = 100;
+
+    (*i3).x = 370;
+    (*i3).y = 120;
+    (*i3).vida = 100;
+
+    (*i4).x = 480;
+    (*i4).y = 120;
+    (*i4).vida = 100;
+
+
+    (*i5).x = 590;
+    (*i5).y = 120;
+    (*i5).vida = 100;
+
+}
+
+void limpaInventario(ALLEGRO_BITMAP* alfabeto) {
+    for (int i = 0; sizeof(inimigosCapturados) > i; i++) {
+        inimigosCapturados[i] = 0;
+    }
+    inventarioCheio = false;
+    
+    exibeInimigos(inimigosCapturados, alfabeto);
+}
+
+void animaInimigos(Inimigo* arr[], ALLEGRO_BITMAP* alfabeto) {
+
+    int frame = (int)(al_get_time() / 0.5) % 2;
+    for (int i = 0; i < 5; i++) {
+        if ((*arr[i]).vida <= 0) continue;
+        char letra = arr[i]->letra;
+        float src_x, src_y;
+ 
+          
+        if (letra <= 'E') {            
+            src_y = 0;
+            src_x = (letra - 'A') * 28;
+        }
+        else if (letra <= 'I') {      
+            src_y = 20;
+            src_x = (letra - 'E') * 28;
+        }
+        else if (letra <= 'N') {    
+            src_y = 40;
+            src_x = (letra - 'J') * 28;
+        }
+        else if (letra <= 'R') {       
+            src_y = 60;
+            src_x = (letra - 'N') * 14;
+        }
+        else if (letra <= 'W') {                       
+            src_y = 80;
+            src_x = (letra - 'S') * 28;
+        }
+
+
+        al_draw_scaled_bitmap(
+            alfabeto,                           // A sprite sheet carregada
+            src_x + frame * 14, src_y,          // Posição X e Y do quadro na imagem original
+            14,                                 // Largura do recorte
+            20,                                 // Altura do recorte
+            (*arr[i]).x - 40, (*arr[i]).y - 50, // Onde desenhar na tela
+            14 * 5.0, 20 * 5.0,                 // escala                   
+            0                                   // Flags (ex: ALLEGRO_FLIP_HORIZONTAL)
+        );
+    }
+}
 
 int main()
 {
@@ -170,6 +297,7 @@ int main()
 
     //Variaveis do personagem
     struct Player p1 = { 150,500,100,10 };
+    int lifebar = 300;
 
     // Inicializando a bala e a velocidade
     
@@ -181,6 +309,7 @@ int main()
 
     //carregar imagem
     ALLEGRO_BITMAP* image = al_load_bitmap("cat.png");
+    ALLEGRO_BITMAP* alfabeto = al_load_bitmap("enemies_sprites.png");
 
     //carregar fila de eventos para observar os eventos do teclado
     ALLEGRO_EVENT_QUEUE* fila = al_create_event_queue();
@@ -194,7 +323,7 @@ int main()
     
  
 
-//array que define quais teclas podem ser clicadas assim evitando que o pragram cheque teclas desnecessárias
+    //array que define quais teclas podem ser clicadas assim evitando que o pragram cheque teclas desnecessárias
     unsigned char key[ALLEGRO_KEY_MAX];
     //aqui fazemos com que a array definitivamente não tenha nenhum valor
     memset(key, 0, sizeof(key));
@@ -224,7 +353,7 @@ int main()
         al_wait_for_event(fila, &event);
 
         //desenhar elementos na tela
-        al_clear_to_color(al_map_rgb(255, 255, 255));
+        al_clear_to_color(al_map_rgb(156, 165, 181));
 
         //game loop
 
@@ -244,7 +373,8 @@ int main()
         }
         //fase 1
         if (fase == 1) {
-            fase_1(i1, i2, i3, i4, i5, font, black, blue, red, green, yellow, condicao, p1, image, inventarioCheio);
+            fase_1(i1, i2, i3, i4, i5, font, black, blue, red, green, yellow, condicao, p1, image, inventarioCheio, lifebar, alfabeto, inimigosCapturados);
+            animaInimigos(arr_inimigos, alfabeto);
         }
         if (fase == 2) {
             condicao = false;
@@ -254,6 +384,7 @@ int main()
             //"Porta"
             if (!condicao)
                 al_draw_filled_rectangle(1200, 10, 1280, 720, yellow);
+
             al_draw_bitmap(image, p1.x - 50, p1.y - 50, 0);
         }
         if (fase > 0) {
@@ -261,6 +392,19 @@ int main()
             {
                 case ALLEGRO_EVENT_TIMER:
 
+                    exibeInimigos(inimigosCapturados, alfabeto);
+                    verificaAtaque(arr_inimigos, &p1);
+                    
+                    if (p1.life <= 0) {
+                        fase = 0;
+                        p1.life = 100;
+                        p1.x = 150;
+                        p1.y = 500;
+                        limpaInventario(alfabeto);
+                        condicao = false;
+                        resetaInimigos(&i1, &i2, &i3, &i4, &i5);
+                    }
+                        
                     //move inimigos
 
                     i1 = moveInimigos(i1, p1,4, arr_inimigos, 5, 0);
@@ -268,6 +412,9 @@ int main()
                     i3 = moveInimigos(i3, p1,5, arr_inimigos, 5, 2);
                     i4 = moveInimigos(i4, p1,2, arr_inimigos, 5, 3);
                     i5 = moveInimigos(i5, p1,3.5, arr_inimigos, 5, 4);
+
+                    
+
 
                     //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
                     if (key[ALLEGRO_KEY_W])
@@ -327,10 +474,11 @@ int main()
                                 (*arr_inimigos[in]).x + 40, (*arr_inimigos[in]).y + 40)
                                 && (*arr_inimigos[in]).vida > 0) {
 
-                                bullet[i].estado = 0;
-                                (*arr_inimigos[in]).vida -= 10;
-                                break;
-                            }
+                                    bullet[i].estado = 0;
+                                    (*arr_inimigos[in]).vida -= 10;
+
+                                    break;
+                                }
                         }
 
 
@@ -411,7 +559,7 @@ int main()
                         if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 900, 200, 1280, 720)) {
                             if (checkar()) {
                                 condicao = true;
-                                limpaInventario();
+                                limpaInventario(alfabeto);
                             }
                             else
                                 p1.life = p1.life - 40;
@@ -441,7 +589,9 @@ int main()
            
         }
         //atualiza os elementos graficos da tela
+        
         al_flip_display();
+        
     }
 
     al_destroy_display(display);

@@ -15,6 +15,7 @@ typedef struct Inimigo
 {
     int x, y, vida;
     char letra;
+    bool invuneravel;
 } Inimigo;
 
 typedef struct Player
