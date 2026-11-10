@@ -1,16 +1,19 @@
-﻿  main.c
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(105,30): warning C4047: 'função': 'Inimigo **' difere em níveis de indireção de 'Inimigo *'
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(105,30): warning C4024: 'verificaColisao': tipos diferentes para parâmetro formal e real 1
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(110,30): warning C4047: 'função': 'Inimigo **' difere em níveis de indireção de 'Inimigo *'
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(110,30): warning C4024: 'verificaColisao': tipos diferentes para parâmetro formal e real 1
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(428,49): warning C4047: 'função': 'Inimigo *' difere em níveis de indireção de 'Inimigo *[5]'
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(428,49): warning C4024: 'moveInimigos': tipos diferentes para parâmetro formal e real 4
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(429,49): warning C4047: 'função': 'Inimigo *' difere em níveis de indireção de 'Inimigo *[5]'
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(429,49): warning C4024: 'moveInimigos': tipos diferentes para parâmetro formal e real 4
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(430,49): warning C4047: 'função': 'Inimigo *' difere em níveis de indireção de 'Inimigo *[5]'
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(430,49): warning C4024: 'moveInimigos': tipos diferentes para parâmetro formal e real 4
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(431,49): warning C4047: 'função': 'Inimigo *' difere em níveis de indireção de 'Inimigo *[5]'
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(431,49): warning C4024: 'moveInimigos': tipos diferentes para parâmetro formal e real 4
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(432,51): warning C4047: 'função': 'Inimigo *' difere em níveis de indireção de 'Inimigo *[5]'
-E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\main.c(432,51): warning C4024: 'moveInimigos': tipos diferentes para parâmetro formal e real 4
+﻿  utils.c
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(36,35): warning C4047: '=': 'char *' difere em níveis de indireção de 'char'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(41,18): warning C4047: '==': 'int *' difere em níveis de indireção de 'int'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(42,25): warning C4047: '=': 'bool *' difere em níveis de indireção de 'int'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(43,20): warning C4047: 'função': 'char *' difere em níveis de indireção de 'char **'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(43,20): warning C4024: 'mostraInimigos': tipos diferentes para parâmetro formal e real 1
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(82,30): warning C4047: 'função': 'Inimigo **' difere em níveis de indireção de 'Inimigo *'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(82,30): warning C4024: 'verificaColisao': tipos diferentes para parâmetro formal e real 1
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(87,30): warning C4047: 'função': 'Inimigo **' difere em níveis de indireção de 'Inimigo *'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(87,30): warning C4024: 'verificaColisao': tipos diferentes para parâmetro formal e real 1
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(95,28): warning C4028: o parâmetro formal 1 é diferente da declaração
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(105,14): warning C4047: 'inicializando': 'char' difere em níveis de indireção de 'char *'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(236,35): warning C4047: '==': 'char *' difere em níveis de indireção de 'int'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(239,40): warning C4047: '==': 'char *' difere em níveis de indireção de 'int'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(251,27): warning C4047: '=': 'char *' difere em níveis de indireção de 'int'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(252,27): warning C4047: '=': 'char *' difere em níveis de indireção de 'int'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(253,20): warning C4047: 'função': 'char *' difere em níveis de indireção de 'char **'
+E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\pi-2sem\utils.c(253,20): warning C4024: 'reviveInimigos': tipos diferentes para parâmetro formal e real 1
   pi-2sem.vcxproj -> E:\projetos\Projetos GIT\PI-2-SEM\pi-2sem\x64\Debug\pi-2sem.exe
