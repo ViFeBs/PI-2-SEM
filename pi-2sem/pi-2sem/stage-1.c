@@ -15,8 +15,10 @@ void fase_1(Inimigo* inimigos[], ALLEGRO_FONT* font, bool* condicao, Player p1, 
     al_draw_filled_rectangle(900, 200, 1200, 720, green);
 
     //"Porta"
-    if (!*condicao)
-        al_draw_filled_rectangle(1200, 10, 1280, 720, yellow);
+    if (!condicao)
+        al_draw_filled_rectangle(porta->x1, porta->y1, porta->x2, porta->y2, yellow);
+    else
+        al_draw_filled_rectangle(porta->x1, porta->y1, porta->x2, porta->y2, black);
 
 
     //card com a pergunta do puzzle de ingles

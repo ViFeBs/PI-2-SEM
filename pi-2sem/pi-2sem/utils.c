@@ -262,6 +262,13 @@ bool checkar(Inimigo* arr[], char* inimigosCapturados, char* inimigosPrioridade,
     return false;
 }
 
+void checkaPorta(Player* p1, Porta* p,int* fase) {
+    if (collide(p1->x - 40, p1->y - 40, p1->x + 40, p1->y + 40, p->x1, p->y1, p->x2, p->y2)) {
+        (*fase) = p->destino;
+        p1->x = 50;
+        p1->y = 500;
+    }
+}
 
 //desenha um texto maior que o normal (a fonte do allegro tem so 8 pixels de altura)
 //escreve o texto numa imagem pequena e depois desenha essa imagem esticada

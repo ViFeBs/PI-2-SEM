@@ -23,6 +23,11 @@ typedef struct Player
     int x, y, life, speed;
 } Player;
 
+typedef struct Porta
+{
+    int x1,x2,y1,y2, destino;
+} Porta;
+
 #endif // !struct
 
 

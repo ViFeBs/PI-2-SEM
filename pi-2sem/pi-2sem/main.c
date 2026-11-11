@@ -46,6 +46,9 @@ int main()
     //variavel de controle do game loop
     bool running = true;
     int fase = 0;
+    faseIniciada = false;
+    inventarioCheio = false;
+    contador = 0;
 
     //variaveis do puzzle
     bool condicao = false;
@@ -79,12 +82,13 @@ int main()
     al_register_event_source(fila, al_get_keyboard_event_source());
     al_register_event_source(fila, al_get_mouse_event_source());
 
+
     //array que define quais teclas podem ser clicadas assim evitando que o pragram cheque teclas desnecessárias
     unsigned char key[ALLEGRO_KEY_MAX];
     //aqui fazemos com que a array definitivamente não tenha nenhum valor
     memset(key, 0, sizeof(key));
 
-    //inimigos da fase 1 (letras)
+
     struct Inimigo i1 = { 150,120,100,'D' };
     struct Inimigo i2 = { 260,120,100,'O' };
     struct Inimigo i3 = { 370,120,100,'A' };
@@ -106,6 +110,7 @@ int main()
     float velocidades[5] = { 4, 3, 5, 2, 3.5 };
 
 
+    Porta p = { 1200,1280,300,400, 2};
     //ativa o timer
     al_start_timer(timer);
 
@@ -146,12 +151,19 @@ int main()
         }
         //fase 1
         if (fase == 1) {
-            fase_1(arr_inimigos, font, &condicao, p1, image, &inventarioCheio, lifebar, spritesInimigo, card);
-            exibeInventario(inimigosCapturados, spritesInimigo);
-            animaInimigos(arr_inimigos, spritesInimigo);
+            
+            fase_1(arr_inimigos, font, condicao, p1, image, inventarioCheio, lifebar, spritesInimigo, &p);
+            
         }
         //fase 2: puzzle de funcoes
         if (fase == 2) {
+            condicao = false;
+            //colisão interação com a porta
+            al_draw_filled_rectangle(900, 200, 1200, 720, red);
+
+            //"Porta"
+            if (!condicao)
+                al_draw_filled_rectangle(1200, 10, 1280, 720, yellow);
             //a porta so abre depois de responder todas as perguntas
             if (perguntaAtual >= TOTAL_PERGUNTAS)
                 condicao = true;
@@ -221,6 +233,8 @@ int main()
                         tempoReviver = 0;
                     }
 
+                    if (condicao)
+                        checkaPorta(&p1, &p, &fase);
                     if (tempoErro > 0)
                         tempoErro--;
 

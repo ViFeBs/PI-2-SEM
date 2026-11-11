@@ -25,6 +25,8 @@ void resetaInimigos(Inimigo* i1, Inimigo* i2, Inimigo* i3, Inimigo* i4, Inimigo*
 void limpaInventario(ALLEGRO_BITMAP* alfabeto, char* inimigosCapturados, bool* inventarioCheio, int* contador);
 void animaInimigos(Inimigo* arr[], ALLEGRO_BITMAP* alfabeto);
 void reviveInimigos(char* inimigosPrioridade, Inimigo* arr[], int qtd);
+bool checkar(Inimigo* arr[], char* inimigosCapturados[], char* inimigosPrioridade[], int* contador, bool* inventarioCheio);
+void checkaPorta(Player* p1, Porta* p, int* fase);
 void desenhaTextoGrande(ALLEGRO_FONT* font, ALLEGRO_COLOR cor, float centroX, float y, float escala, const char* texto);
 void desenhaCard(ALLEGRO_BITMAP* card, ALLEGRO_FONT* font, const char* titulo, const char* linha1, const char* linha2, const char* linha3);
 bool checkar(Inimigo* arr[], char* inimigosCapturados, char* inimigosPrioridade, int* contador, bool* inventarioCheio);
