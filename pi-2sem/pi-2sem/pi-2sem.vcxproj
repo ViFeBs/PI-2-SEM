@@ -22,6 +22,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="stage-1.c" />
     <ClCompile Include="utils.c" />
+    <ClCompile Include="stage-2.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -30,6 +31,7 @@
     <ClInclude Include="stage-1.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="stage-2.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
