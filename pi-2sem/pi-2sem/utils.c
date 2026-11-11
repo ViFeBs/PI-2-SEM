@@ -40,6 +40,7 @@ void getInimigos(Inimigo inimigo, char* inimigosCapturados[], int* contador, boo
     }
     if (contador == 2)
         inventarioCheio = true;
+
     mostraInimigos(inimigosCapturados);
 }
 
@@ -253,4 +254,12 @@ bool checkar(Inimigo* arr[],char* inimigosCapturados[], char* inimigosPrioridade
     reviveInimigos(inimigosPrioridade, arr, 5);
 
     return false;
+}
+
+void checkaPorta(Player* p1, Porta* p,int* fase) {
+    if (collide(p1->x - 40, p1->y - 40, p1->x + 40, p1->y + 40, p->x1, p->y1, p->x2, p->y2)) {
+        (*fase) = p->destino;
+        p1->x = 50;
+        p1->y = 500;
+    }
 }

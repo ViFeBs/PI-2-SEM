@@ -11,6 +11,6 @@
 #include <string.h>
 #include "Structs.h"
 
-void fase_1(Inimigo* inimigos[], ALLEGRO_FONT* font, bool* condicao, Player p1, ALLEGRO_BITMAP* image, bool* inventarioCheio, int lifebar, ALLEGRO_BITMAP* spriteInimigos);
+void fase_1(Inimigo* inimigos[], ALLEGRO_FONT* font, bool* condicao, Player p1, ALLEGRO_BITMAP* image, bool* inventarioCheio, int lifebar, ALLEGRO_BITMAP* spriteInimigos,Porta* porta);
 
 #endif

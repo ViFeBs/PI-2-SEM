@@ -46,6 +46,9 @@ int main()
     //variavel de controle do game loop
     bool running = true;
     int fase = 0;
+    faseIniciada = false;
+    inventarioCheio = false;
+    contador = 0;
 
     //variaveis do puzzle
     bool condicao = false;
@@ -73,15 +76,12 @@ int main()
     al_register_event_source(fila, al_get_keyboard_event_source());
     al_register_event_source(fila, al_get_mouse_event_source());
 
-    //movimentação do personagem
-
-    
- 
 
     //array que define quais teclas podem ser clicadas assim evitando que o pragram cheque teclas desnecessárias
     unsigned char key[ALLEGRO_KEY_MAX];
     //aqui fazemos com que a array definitivamente não tenha nenhum valor
     memset(key, 0, sizeof(key));
+
 
     struct Inimigo i1 = { 150,120,100,'D' };
     struct Inimigo i2 = { 260,120,100,'O' };
@@ -92,6 +92,7 @@ int main()
     Inimigo* arr_inimigos[5] = {&i1, &i2, &i3, &i4, &i5};
 
 
+    Porta p = { 1200,1280,300,400, 2};
     //ativa o timer
     al_start_timer(timer);
 
@@ -129,13 +130,13 @@ int main()
         //fase 1
         if (fase == 1) {
             
-            fase_1(arr_inimigos, font, &condicao, p1, image, &inventarioCheio, lifebar, spritesInimigo);
+            fase_1(arr_inimigos, font, condicao, p1, image, inventarioCheio, lifebar, spritesInimigo, &p);
             
         }
         if (fase == 2) {
             condicao = false;
             //colisão interação com a porta
-            al_draw_filled_rectangle(900, 200, 1200, 720, green);
+            al_draw_filled_rectangle(900, 200, 1200, 720, red);
 
             //"Porta"
             if (!condicao)
@@ -171,7 +172,8 @@ int main()
                     i4 = moveInimigos(i4, p1,2, arr_inimigos, 5, 3);
                     i5 = moveInimigos(i5, p1,3.5, arr_inimigos, 5, 4);
 
-                    
+                    if (condicao)
+                        checkaPorta(&p1, &p, &fase);
 
 
                     //aqui observamos a array de teclas para observar qual foi cliclada ao invés do estádo da tecla
@@ -184,26 +186,13 @@ int main()
                     if (key[ALLEGRO_KEY_A])
                         if (fase != 1) {
                             p1.x -= p1.speed;
-                            if (p1.x < 0) {
-                                fase--;
-                                p1.x = 1280;
-                                condicao = true;
-                            }
                         }
                         else if (p1.x > 50)
                                 p1.x -= p1.speed;
                     if (key[ALLEGRO_KEY_D])
-                        if (!condicao) {
-                            if ((p1.x < 1280))
-                                p1.x += p1.speed;
-                        }
-                        else {
+                        if ((p1.x < 1280))
                             p1.x += p1.speed;
-                        }
-                        if (p1.x > 1280) {
-                            fase++;
-                            p1.x = 0;
-                        }
+                        
 
                     // movimentação de todas as balas ativas
                     for (int i = 0; i < MAX_BALAS; i++) {
@@ -233,7 +222,7 @@ int main()
                                 && (*arr_inimigos[in]).vida > 0) {
 
                                     bullet[i].estado = 0;
-                                    (*arr_inimigos[in]).vida -= 10;
+                                    (*arr_inimigos[in]).vida--;
 
                                     break;
                                 }

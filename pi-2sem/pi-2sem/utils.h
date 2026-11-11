@@ -26,6 +26,7 @@ void limpaInventario(ALLEGRO_BITMAP* alfabeto, char* inimigosCapturados[], bool*
 void animaInimigos(Inimigo* arr[], ALLEGRO_BITMAP* alfabeto);
 void reviveInimigos(char* inimigosPrioridade, Inimigo* arr[], int qtd);
 bool checkar(Inimigo* arr[], char* inimigosCapturados[], char* inimigosPrioridade[], int* contador, bool* inventarioCheio);
+void checkaPorta(Player* p1, Porta* p, int* fase);
 
 
 #endif // !struct#pragma once

@@ -2,7 +2,7 @@
 #include "stage-1.h"
 #include <string.h>
 
-void fase_1(Inimigo* inimigos[], ALLEGRO_FONT* font, bool* condicao, Player p1, ALLEGRO_BITMAP* image, bool* inventarioCheio, int lifebar, ALLEGRO_BITMAP* spriteInimigos) {
+void fase_1(Inimigo* inimigos[], ALLEGRO_FONT* font, bool* condicao, Player p1, ALLEGRO_BITMAP* image, bool* inventarioCheio, int lifebar, ALLEGRO_BITMAP* spriteInimigos, Porta* porta) {
     
     ALLEGRO_COLOR red = al_map_rgb(255, 0, 0);
     ALLEGRO_COLOR blue = al_map_rgb(0, 0, 255);
@@ -15,7 +15,9 @@ void fase_1(Inimigo* inimigos[], ALLEGRO_FONT* font, bool* condicao, Player p1, 
 
     //"Porta"
     if (!condicao)
-        al_draw_filled_rectangle(1200, 10, 1280, 720, yellow);
+        al_draw_filled_rectangle(porta->x1, porta->y1, porta->x2, porta->y2, yellow);
+    else
+        al_draw_filled_rectangle(porta->x1, porta->y1, porta->x2, porta->y2, black);
 
 
     if (collide(p1.x - 45, p1.y + 47, p1.x + 40, p1.y - 44, 350, 200, 700, 720)) {
